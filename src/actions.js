@@ -1,15 +1,15 @@
-const NEW_MESSAGE = "NEW_MESSAGE";
+export const NEW_MESSAGE = "NEW_MESSAGE";
 
-function newMessage(message) {
+export function newMessage(message) {
   return {
     type: NEW_MESSAGE,
     payload: message
   };
 }
 
-const ALL_MESSAGES = "ALL_MESSAGES";
+export const ALL_MESSAGES = "ALL_MESSAGES";
 
-function allMessage(messages) {
+export function allMessages(messages) {
   return {
     type: ALL_MESSAGES,
     payload: messages

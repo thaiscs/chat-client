@@ -6,15 +6,33 @@ class App extends Component {
 
   componentDidMount() {
     this.stream.onmessage = event => {
-      // console.log("event test: ", event.data);
-
-      const parse = JSON.parse(event.data); // back to js data types
-      console.log("parsed: ", parse);
+      const parsed = JSON.parse(event.data); // back to js data types
+      // this.props.allMessages(parse);
+      this.props.dispatch(parsed);
+      console.log("parsed: ", parsed);
     };
   }
 
   render() {
-    return <div>cliente</div>;
+    console.log("props:", this.props);
+    const { messages } = this.props;
+
+    const list = messages.map(message => (
+      <p key={message.id}>{message.text}</p>
+    ));
+
+    return (
+      <div className="chatapp">
+        <div>
+          <p>
+            <span>
+              <strong>ChatApp</strong>
+            </span>
+          </p>
+        </div>
+        <div>{list}</div>
+      </div>
+    );
   }
 }
 
@@ -25,5 +43,11 @@ function mapStateToProps(state) {
     messages: state
   };
 }
+
+// put data into store
+// const mapDispatchToProps = {
+//   allMessages
+// the action can be dispatched by running this.props.allMessages inside the component
+// };
 
 export default connect(mapStateToProps)(App);
