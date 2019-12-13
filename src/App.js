@@ -1,7 +1,11 @@
 import React, { Component } from "react";
 import { connect } from "react-redux";
+import superagent from "superagent";
 
 class App extends Component {
+  state = {
+    text: ""
+  };
   stream = new EventSource("http://localhost:4000/stream");
 
   componentDidMount() {
@@ -13,6 +17,27 @@ class App extends Component {
     };
   }
 
+  onChange = event => {
+    // OPTIONS:
+    // const value = event.target.value
+    // const {value} = event.target
+    // nested destructuring
+    const {
+      target: { value }
+    } = event;
+    this.setState({ text: value });
+  };
+
+  onClick = () => {
+    this.setState({ text: "" });
+  };
+
+  onSubmit = async event => {
+    event.preventDefault();
+    const url = "http://localhost:4000/messages";
+    const response = await superagent.post(url).send(this.state);
+    console.log("response:", response);
+  };
   render() {
     console.log("props:", this.props);
     const { messages } = this.props;
@@ -22,15 +47,27 @@ class App extends Component {
     ));
 
     return (
-      <div className="chatapp">
-        <div>
+      <div className="App">
+        <div className="chatapp">
           <p>
             <span>
               <strong>ChatApp</strong>
             </span>
           </p>
+          <header>
+            {" "}
+            <form onSubmit={this.onSubmit}>
+              <input
+                onChange={this.onChange}
+                type="text"
+                value={this.state.text}
+              />
+              <button>SEND</button>
+            </form>
+            <button onClick={this.onClick}>RESET</button>
+          </header>
         </div>
-        <div>{list}</div>
+        <main className="chatmessages">{list}</main>
       </div>
     );
   }
@@ -39,7 +76,7 @@ class App extends Component {
 function mapStateToProps(state) {
   return {
     // should always return an object
-    // each prop of this object becomes a prop in this component
+    // each property of this object becomes a PROP in this component :)
     messages: state
   };
 }
